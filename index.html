@@ -83,6 +83,93 @@
             border: 1px solid var(--text);
         }
     </style>
+    <script>
+        // simple commands list
+        let commands = {
+            shrug: "¯\\_(ツ)_/¯",
+            github: "https://github.com/coderLads/la-gran-comunidad",
+            policy: "https://pastebin.com/raw/naYCi8R8",
+        };
+
+        // regex for matching urls to make links
+        let urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+
+        // function to make urls into links in chat
+        function linkify(text) {
+            return text.replace(urlRegex, function (url) {
+                return '<a href="' + url + '" target="_blank">' + url + '</a>';
+            });
+        }
+
+        // simple document ready function
+        $(function () {
+
+            // generate a random user color
+            let color = "#" + ((1 << 24) * Math.random() | 0).toString(16);
+
+            // setup the color and focus the text box
+            $("#m").css('color', color);
+            $("#m").focus();
+
+            // open the socket connection to the server
+            var socket = io();
+
+            // when you send a message, parse it
+            $('form').submit(function () {
+
+                // if it's the help command, show commands to only that user, otherwise broadcast message and color to all open clients
+                if ($('#m').val() != "/help") {
+                    socket.emit('chat message', {
+                        message: $('#m').val(),
+                        color: color
+                    });
+                } else {
+                    $('#messages').append($('<li>').text("Current commands are as follows:"));
+                    for (let cmd in commands) {
+                        $('#messages').append($('<li>').text(cmd));
+                    }
+                }
+
+                // clear the form and prevent default handling
+                $('#m').val('');
+                return false;
+            });
+
+            // when a message is recieved, parse it for links, and run any needed commands, otherwise just print the message
+            socket.on('chat message', function (msg) {
+
+                if (urlRegex.test(msg.message)) { // check if it's a link
+                    $('#messages').append($('<li>').html(linkify(msg.message)).css('color', msg.color));
+
+                } else { // check if it's a command
+                    let found = false;
+                    for (let cmd in commands) {
+                        if (msg.message.includes("/" + cmd)) {
+                            $('#messages').append($('<li>').html(linkify(msg.message.split('/' + cmd)[0] +
+                                commands[cmd] + msg.message.split('/' + cmd)[1])).css('color',
+                                msg
+                                .color));
+                            found = true;
+                        }
+                    }
+
+                    if (!found) { // just print it if it's a normal message
+                        $('#messages').append($('<li>').text(msg.message).css('color', msg.color));
+                    }
+                }
+
+                // scroll the user down to the bottom after a new message is added
+                let msgs = document.getElementById("messages");
+                msgs.scrollTo(0, msgs.scrollHeight);
+            });
+
+            // when the server updates the number of users counter, update the little display for it
+            socket.on('total users', function (total) {
+                $("#counter").text("Online: " + total);
+            });
+
+        });
+    </script>
 </head>
 
 <body>
@@ -98,54 +185,6 @@
             <!-- <button>Send</button> -->
         </form>
     </main>
-
-    <script>
-        let urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-
-        function linkify(text) {
-            return text.replace(urlRegex, function (url) {
-                return '<a href="' + url + '" target="_blank">' + url + '</a>';
-            });
-        }
-
-        $(function () {
-            let color = "#" + ((1 << 24) * Math.random() | 0).toString(16);
-
-            $("#m").css('color', color);
-            $("#m").focus();
-
-            var socket = io();
-
-            $('form').submit(function () {
-                socket.emit('chat message', {
-                    message: $('#m').val(),
-                    color: color
-                });
-                $('#m').val('');
-                return false;
-            });
-
-            socket.on('chat message', function (msg) {
-                if (urlRegex.test(msg.message)) {
-                    $('#messages').append($('<li>').html(linkify(msg.message)).css('color', msg.color));
-                } else {
-                    if (msg.message.includes("/shrug")) {
-                        $('#messages').append($('<li>').text(msg.message.split('/shrug')[0] +
-                            "¯\\_(ツ)_/¯" + msg.message.split('/shrug')[1]).css('color', msg.color));
-                    } else {
-                        $('#messages').append($('<li>').text(msg.message).css('color', msg.color));
-                    }
-                }
-
-                let msgs = document.getElementById("messages");
-                msgs.scrollTo(0, msgs.scrollHeight);
-            });
-
-            socket.on('total users', function (total) {
-                $("#counter").text("Online: " + total);
-            });
-        });
-    </script>
 
 </body>
 

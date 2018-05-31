@@ -2,33 +2,99 @@
 <html>
 
 <head>
+    <title>La Gran Comunidad</title>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>La Gran Comunidad</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <style>
+        :root {
+            --text: lime;
+            --background: black;
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            font-size: 20px;
+            font-family: 'Monaco';
+        }
+
+        main {
+            height: 100%;
+            display: grid;
+            grid-template-columns: auto;
+            grid-template-rows: auto 70px;
+            background: var(--background);
+            color: var(--text);
+        }
+
+        input {
+            font-size: inherit;
+            font-family: inherit;
+            box-sizing: border-box;
+            border: 0;
+            border-top: 1px solid var(--text);
+            padding: 15px;
+            width: 100%;
+            height: 100%;
+            background: var(--background);
+            color: var(--text);
+            word-wrap: break-word;
+        }
+
+        input:focus {
+            outline: none;
+        }
+
+        ul {
+            margin: 0;
+            padding: 15px;
+            list-style-type: none;
+            overflow-y: scroll;
+            overflow-x: auto;
+        }
+
+        li {
+            display: block;
+            word-wrap: break-word;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 
 <body>
-    <ul id="messages"></ul>
-    <form action="">
-        <input id="m" autocomplete="off" />
-        <button>Send</button>
-    </form>
+    <main>
+        <ul id="messages"></ul>
+        <form action="">
+            <input id="m" autocomplete="off" />
+            <!-- <button>Send</button> -->
+        </form>
+    </main>
 
     <script>
         $(function () {
+            let color = "#" + ((1 << 24) * Math.random() | 0).toString(16);
+
             var socket = io();
             $('form').submit(function () {
                 socket.emit('chat message', $('#m').val());
                 $('#m').val('');
                 return false;
             });
+
             socket.on('chat message', function (msg) {
                 $('#messages').append($('<li>').text(msg));
-                window.scrollTo(0, document.body.scrollHeight);
+                document.getElementsByTagName('ul')[0].scrollTo(0, document.getElementsByTagName('ul')[
+                    0].scrollHeight);
             });
         });
     </script>

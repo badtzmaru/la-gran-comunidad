@@ -68,6 +68,10 @@
             word-wrap: break-word;
             margin-bottom: 10px;
         }
+
+        a {
+            color: inherit !important;
+        }
     </style>
 </head>
 
@@ -81,6 +85,14 @@
     </main>
 
     <script>
+        let urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+
+        function linkify(text) {
+            return text.replace(urlRegex, function (url) {
+                return '<a href="' + url + '">' + url + '</a>';
+            });
+        }
+
         $(function () {
             let color = "#" + ((1 << 24) * Math.random() | 0).toString(16);
 
@@ -90,16 +102,28 @@
             var socket = io();
 
             $('form').submit(function () {
-                socket.emit('chat message', $('#m').val() + "`$%" + color);
+                socket.emit('chat message', {
+                    message: $('#m').val(),
+                    color: color
+                });
                 $('#m').val('');
                 return false;
             });
 
             socket.on('chat message', function (msg) {
-                $('#messages').append($('<li>').text(msg.split("`$%")[0]).css('color', msg.split("`$%")[
-                    1]));
-                document.getElementsByTagName('ul')[0].scrollTo(0, document.getElementsByTagName('ul')[
-                    0].scrollHeight);
+                if (urlRegex.test(msg.message)) {
+                    $('#messages').append($('<li>').html(linkify(msg.message)).css('color', msg.color));
+                } else {
+                    $('#messages').append($('<li>').text(msg.message).css('color', msg.color));
+                }
+
+
+                // $('li').each(function (element) {
+                //     element.innerHTML = linkify(element.innerHTML);
+                // });
+
+                let msgs = document.getElementById("messages");
+                msgs.scrollTo(0, msgs.scrollHeight);
             });
         });
     </script>

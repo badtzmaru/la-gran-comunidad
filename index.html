@@ -72,6 +72,16 @@
         a {
             color: inherit !important;
         }
+
+        #counter {
+            position: absolute;
+            right: 0;
+            top: 0;
+            padding: 10px;
+            color: var(--text);
+            background: var(--background);
+            border: 1px solid var(--text);
+        }
     </style>
 </head>
 
@@ -118,7 +128,6 @@
                     if (msg.message.includes("/shrug")) {
                         $('#messages').append($('<li>').text(msg.message.split('/shrug')[0] +
                             "¯\\_(ツ)_/¯" + msg.message.split('/shrug')[1]).css('color', msg.color));
-
                     } else {
                         $('#messages').append($('<li>').text(msg.message).css('color', msg.color));
                     }
@@ -129,7 +138,7 @@
             });
 
             socket.on('total users', function (total) {
-                $("#counter").text(total);
+                $("#counter").text("Online: " + total);
             });
         });
     </script>

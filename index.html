@@ -84,6 +84,9 @@
         $(function () {
             let color = "#" + ((1 << 24) * Math.random() | 0).toString(16);
 
+            $("#m").css('color', color);
+            $("#m").focus();
+
             var socket = io();
 
             $('form').submit(function () {

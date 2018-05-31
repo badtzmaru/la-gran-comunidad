@@ -118,6 +118,7 @@
                     if (msg.message.includes("/shrug")) {
                         $('#messages').append($('<li>').text(msg.message.split('/shrug')[0] +
                             "¯\\_(ツ)_/¯" + msg.message.split('/shrug')[1]).css('color', msg.color));
+
                     } else {
                         $('#messages').append($('<li>').text(msg.message).css('color', msg.color));
                     }

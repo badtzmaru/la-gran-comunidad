@@ -1,0 +1,16 @@
+{
+    "name": "la-gran-comunidad",
+    "description": "la-gran-comunidad",
+    "website": "https://github.com/badtzmaru/la-gran-comunidad",
+    "repository": "https://github.com/badtzmaru/la-gran-comunidad",
+    "success_url": "/",
+    "keywords": [
+        "node",
+        "express",
+        "socket.io",
+        "realtime",
+        "websocket"
+    ],
+    "scripts": {},
+    "addons": []
+}

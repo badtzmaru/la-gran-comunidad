@@ -85,14 +85,16 @@
             let color = "#" + ((1 << 24) * Math.random() | 0).toString(16);
 
             var socket = io();
+
             $('form').submit(function () {
-                socket.emit('chat message', $('#m').val());
+                socket.emit('chat message', $('#m').val() + "`$%" + color);
                 $('#m').val('');
                 return false;
             });
 
             socket.on('chat message', function (msg) {
-                $('#messages').append($('<li>').text(msg));
+                $('#messages').append($('<li>').text(msg.split("`$%")[0]).css('color', msg.split("`$%")[
+                    1]));
                 document.getElementsByTagName('ul')[0].scrollTo(0, document.getElementsByTagName('ul')[
                     0].scrollHeight);
             });

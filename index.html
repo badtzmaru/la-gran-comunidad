@@ -114,7 +114,11 @@
                 if (urlRegex.test(msg.message)) {
                     $('#messages').append($('<li>').html(linkify(msg.message)).css('color', msg.color));
                 } else {
-                    $('#messages').append($('<li>').text(msg.message).css('color', msg.color));
+                    if (msg.message == "/shrug") {
+                        $('#messages').append($('<li>').text("¯\\_(ツ)_/¯").css('color', msg.color));
+                    } else {
+                        $('#messages').append($('<li>').text(msg.message).css('color', msg.color));
+                    }
                 }
 
                 let msgs = document.getElementById("messages");

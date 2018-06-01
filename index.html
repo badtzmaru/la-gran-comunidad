@@ -188,7 +188,8 @@
 
                 // when the server updates the number of users counter, update the little display for it
                 socket.on('total users', function (total) {
-                    $("#counter").text("Online: " + total);
+                    let realTotal = parseInt(total) - 1;
+                    $("#counter").text("Online: " + realTotal);
                 });
 
                 // listener for server update

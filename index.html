@@ -181,6 +181,15 @@
                 $("#counter").text("Online: " + total);
             });
 
+            // listener for server update
+            socket.on('update', function () {
+                $('#messages').append($('<li>').text(
+                    "The server has been updated. You will be reconnected."));
+                setTimeout(() => {
+                    window.location.href = window.location.href;
+                }, 3000);
+            });
+
         });
     </script>
 </head>

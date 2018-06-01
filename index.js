@@ -4,7 +4,7 @@ var io = require('socket.io')(http);
 var port = process.env.PORT || 80;
 
 setInterval(function () {
-    io.emit('total users', io.engine.clientsCount)
+    io.emit('total users', io.engine.clientsCount);
 }, 1000);
 
 app.get('/', function (req, res) {
@@ -20,4 +20,8 @@ io.on('connection', function (socket) {
 
 http.listen(port, function () {
     console.log('listening on *:' + port);
+    setTimeout(() => {
+        io.emit('update');
+    }, 3000);
+
 });

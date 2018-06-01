@@ -135,8 +135,11 @@
                 } else if ($('#m').val().startsWith("/d")) {
                     let result = Math.floor(Math.random() * parseInt($('#m').val().split("/d")[1]) + 1);
 
-                    $('#messages').append($('<li>').text("One d" + $('#m').val().split("/d")[1] +
-                        " was rolled. A " + result + "!").css("color", color));
+                    socket.emit('chat message', {
+                        message: "One d" + $('#m').val().split("/d")[1] + " was rolled. A " +
+                            result + "!",
+                        color: color
+                    });
                 } else {
                     socket.emit('chat message', {
                         message: $('#m').val(),

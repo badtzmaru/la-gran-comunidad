@@ -120,16 +120,21 @@
             $('form').submit(function () {
 
                 // if it's the help command, show commands to only that user, otherwise broadcast message and color to all open clients
-                if ($('#m').val() != "/help") {
-                    socket.emit('chat message', {
-                        message: $('#m').val(),
-                        color: color
-                    });
-                } else {
+                if ($('#m').val() == "/help") {
                     $('#messages').append($('<li>').text("Current commands are as follows:"));
                     for (let cmd in commands) {
                         $('#messages').append($('<li>').text(cmd));
                     }
+                } else if ($('#m').val().startsWith("/d")) {
+                    let result = Math.floor(Math.random() * parseInt($('#m').val().split("/d")[1]) + 1);
+
+                    $('#messages').append($('<li>').text("One d" + $('#m').val().split("/d")[1] +
+                        " was rolled. A " + result + "!").css("color", color));
+                } else {
+                    socket.emit('chat message', {
+                        message: $('#m').val(),
+                        color: color
+                    });
                 }
 
                 // clear the form and prevent default handling

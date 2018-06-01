@@ -22,6 +22,6 @@ http.listen(port, function () {
     console.log('listening on *:' + port);
     setTimeout(() => {
         io.emit('update');
-    }, 3000);
+    }, 5000);
 
 });

@@ -92,6 +92,10 @@
             policy: "https://pastebin.com/raw/naYCi8R8",
             demographics: "https://i.imgur.com/L90oYAB.png"
         };
+        let programs = [
+            "help",
+            "d"
+        ];
 
         // regex for matching urls to make links
         let urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
@@ -124,6 +128,9 @@
                     $('#messages').append($('<li>').text("Current commands are as follows:"));
                     for (let cmd in commands) {
                         $('#messages').append($('<li>').text(cmd));
+                    }
+                    for (let prog in programs) {
+                        $('#messages').append($('<li>').text(programs[prog]));
                     }
                 } else if ($('#m').val().startsWith("/d")) {
                     let result = Math.floor(Math.random() * parseInt($('#m').val().split("/d")[1]) + 1);

@@ -244,7 +244,7 @@
 
                     if (findUrl.test(msg.message)) {
                         $('#messages').append($('<li>').html(msg.message.replace(/<\/?[^>]+(>|$)/g, "").replace(findUrl, function (url) {
-                            return '<a href="' + url + '" target="_blank">' + url + '</a>';
+                            return msg.user + '<a href="' + url + '" target="_blank">' + url + '</a>';
                         })).css('color', msg.color));
                     } else {
                         $('#messages').append($('<li>').text(msg.user + msg.message).css('color', msg.color));

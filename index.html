@@ -2,13 +2,20 @@
 <html>
 
 <head>
-    <title>La Gran Comunidad</title>
+    <title>Dark Chat</title>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Dark Chat" />
+    <meta property="og:description" content="Anonymous chat without logs, censorship or tracking." />
+    <meta property="og:image" content="https://cdn.discordapp.com/attachments/225805312978976768/452580455741653022/icon.png" />
+
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.0/js.cookie.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js'></script>
+    <link rel="shortcut icon" href="https://cdn.discordapp.com/attachments/225805312978976768/452580455741653022/icon.png" type="image/x-icon">
     <style>
         :root {
             --text: lime;
@@ -84,19 +91,74 @@
             background: var(--background);
             border: 1px solid var(--text);
         }
+
+        #user {
+            position: absolute;
+            margin-top: -25px;
+        }
     </style>
     <script>
-        // simple commands list
-        // let commands = {
-        //     shrug: "¯\\_(ツ)_/¯",
-        //     github: "https://github.com/coderLads/la-gran-comunidad",
-        //     policy: "https://pastebin.com/raw/jDwQa5ix",
-        //     demographics: "https://i.imgur.com/L90oYAB.png"
-        // };
-        // let programs = [
-        //     "help",
-        //     "d"
-        // ];
+        let usernames = true;
+
+        let userList = [
+            "Aidan G",
+            "Alex S ",
+            "Amanda B",
+            "Angus B",
+            "Anthony R",
+            "Anya K",
+            "Aster S",
+            "Avery R",
+            "Bailey L",
+            "Beck M",
+            "Bryce P",
+            "Caden W",
+            "Cash M",
+            "Eli K",
+            "Ella M",
+            "Emma C",
+            "Esther G",
+            "Graeme S",
+            "Grant S",
+            "Henry B",
+            "Ian L",
+            "Irene G",
+            "Jack N",
+            "Jacob K",
+            "Jasmin C",
+            "Jessie B",
+            "Lela B",
+            "Lia P",
+            "Lucas J",
+            "Madeleine H",
+            "Max S",
+            "Mayfield V",
+            "Miranda G",
+            "Monica S",
+            "Olive H",
+            "Olivia A",
+            "Ori K",
+            "Oscar W",
+            "Red D",
+            "Rees D",
+            "Ryan N",
+            "Sadie G",
+            "Samuel B",
+            "Shane O",
+            "Simon E",
+            "Sofia M",
+            "Tui S",
+            "Vince D",
+            "Wilder T",
+            "Will K",
+            "Wyatt B",
+            "Wyatt S",
+        ];
+        // let userList = [];
+        // axios.get("https://pscscoding.com/proxy.php?url=https://pastebin.com/raw/jDwQa5ix").then(response => {
+        //     userList = response.data.split("\n");
+        //     console.log(userList);
+        // })
 
         let commands = {
             shrug: () => {
@@ -128,9 +190,16 @@
                 // generate a random user color
                 let color = "#" + ((1 << 24) * Math.random() | 0).toString(16);
 
+                let user = "";
+                if (usernames) {
+                    user = userList[Math.floor(Math.random() * userList.length)] + ": ";
+                }
+
                 // setup the color and focus the text box
                 $("#m").css('color', color);
+                $("#user").css('color', color);
                 $("#m").focus();
+                $("#user").text(user);
 
                 // open the socket connection to the server
                 var socket = io();
@@ -154,10 +223,13 @@
                     }
 
                     // send the message to all clients
-                    socket.emit('chat message', {
-                        message: sent,
-                        color: color
-                    });
+                    if (sent != "") {
+                        socket.emit('chat message', {
+                            message: sent,
+                            color: color,
+                            user: user
+                        });
+                    }
 
                     // clear the form and prevent default handling
                     $('#m').val('');
@@ -174,7 +246,7 @@
                             return '<a href="' + url + '" target="_blank">' + url + '</a>';
                         })).css('color', msg.color));
                     } else {
-                        $('#messages').append($('<li>').text(msg.message).css('color', msg.color));
+                        $('#messages').append($('<li>').text(msg.user + msg.message).css('color', msg.color));
                     }
 
                     // scroll the user down to the bottom after a new message is added
@@ -213,6 +285,7 @@
         <ul id="messages"></ul>
 
         <form action="">
+            <div id="user"></div>
             <input id="m" autocomplete="off" maxlength="1000" />
         </form>
     </main>

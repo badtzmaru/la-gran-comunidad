@@ -9,7 +9,8 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="Dark Chat" />
     <meta property="og:description" content="Anonymous chat without logs, censorship or tracking." />
-    <meta property="og:image" content="https://cdn.discordapp.com/attachments/225805312978976768/452580455741653022/icon.png" />
+    <meta property="og:image" content="https://cdn.discordapp.com/attachments/225805312978976768/452580455741653022/icon.png"
+    />
 
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
@@ -17,6 +18,11 @@
     <script src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js'></script>
     <link rel="shortcut icon" href="https://cdn.discordapp.com/attachments/225805312978976768/452580455741653022/icon.png" type="image/x-icon">
     <style>
+        @font-face {
+            font-family: "Menlo";
+            src: url("http://rabu.co/cdn/fonts/Menlo-Regular.ttf") format('truetype');
+        }
+
         :root {
             --text: lime;
             --background: black;
@@ -33,7 +39,7 @@
             height: 100%;
             width: 100%;
             font-size: 20px;
-            font-family: 'Monaco';
+            font-family: 'Menlo';
         }
 
         main {
@@ -180,7 +186,9 @@
             },
             d: (p) => {
                 let n = parseInt(p.split("/d ")[1]);
-                return ["One d" + n + " was rolled. A " + (Math.floor(Math.random() * n) + 1).toString() + "!", true];
+                return ["One d" + n + " was rolled. A " + (Math.floor(Math.random() * n) + 1).toString() + "!",
+                    true
+                ];
             }
         }
 
@@ -240,12 +248,15 @@
                 // when a message is recieved, print the message output
                 socket.on('chat message', function (msg) {
 
-                    let findUrl = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+                    let findUrl =
+                        /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
 
                     if (findUrl.test(msg.message)) {
-                        $('#messages').append($('<li>').html(msg.message.replace(/<\/?[^>]+(>|$)/g, "").replace(findUrl, function (url) {
-                            return msg.user + '<a href="' + url + '" target="_blank">' + url + '</a>';
-                        })).css('color', msg.color));
+                        $('#messages').append($('<li>').html(msg.message.replace(/<\/?[^>]+(>|$)/g, "")
+                            .replace(findUrl, function (url) {
+                                return msg.user + '<a href="' + url + '" target="_blank">' +
+                                    url + '</a>';
+                            })).css('color', msg.color));
                     } else {
                         $('#messages').append($('<li>').text(msg.user + msg.message).css('color', msg.color));
                     }
@@ -262,7 +273,8 @@
 
                 // listener for server update
                 socket.on('update', function () {
-                    $('#messages').append($('<li>').text("The server has been updated. You will be reconnected."));
+                    $('#messages').append($('<li>').text(
+                        "The server has been updated. You will be reconnected."));
                     setTimeout(() => {
                         window.location.href = window.location.href;
                     }, 3000);

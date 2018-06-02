@@ -117,9 +117,7 @@
             },
             d: (p) => {
                 let n = parseInt(p.split("/d ")[1]);
-                return ["One d" + n + " was rolled. A " + (Math.floor(Math.random() * n) + 1).toString() + "!",
-                    true
-                ];
+                return ["One d" + n + " was rolled. A " + (Math.floor(Math.random() * n) + 1).toString() + "!", true];
             }
         }
 
@@ -168,7 +166,17 @@
 
                 // when a message is recieved, print the message output
                 socket.on('chat message', function (msg) {
-                    $('#messages').append($('<li>').text(msg.message).css('color', msg.color));
+
+                    let findUrl = new RegExp(/[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi);
+
+                    if (msg.message.match(findUrl)) {
+                        console.log("found");
+                        $('#messages').append($('<li>').html(msg.message.replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, function (url) {
+                            return '<a href="' + url + '" target="_blank">' + url + '</a>';
+                        })).css('color', msg.color));
+                    } else {
+                        $('#messages').append($('<li>').text(msg.message).css('color', msg.color));
+                    }
 
                     // scroll the user down to the bottom after a new message is added
                     let msgs = document.getElementById("messages");
@@ -177,20 +185,19 @@
 
                 // when the server updates the number of users counter, update the little display for it
                 socket.on('total users', function (total) {
-                    $("#counter").text("Online: " + (parseInt(total) - 1).toString());
+                    $("#counter").text("Online: " + total);
                 });
 
                 // listener for server update
                 socket.on('update', function () {
-                    $('#messages').append($('<li>').text(
-                        "The server has been updated. You will be reconnected."));
+                    $('#messages').append($('<li>').text("The server has been updated. You will be reconnected."));
                     setTimeout(() => {
                         window.location.href = window.location.href;
                     }, 3000);
                 });
 
             } else { // if they did not agree
-                if (confirm("I have read and understand the policy listed at " + commands.policy)) {
+                if (confirm("I have read and understand the policy listed at " + commands.policy())) {
                     Cookies.set('policy', 'true', {
                         expires: 360
                     });
@@ -205,8 +212,9 @@
     <div id="counter"></div>
     <main>
         <ul id="messages"></ul>
+
         <form action="">
-            <input id="m" autocomplete="off" maxlength="3000" />
+            <input id="m" autocomplete="off" maxlength="1000" />
         </form>
     </main>
 

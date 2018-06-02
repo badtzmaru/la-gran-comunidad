@@ -167,11 +167,10 @@
                 // when a message is recieved, print the message output
                 socket.on('chat message', function (msg) {
 
-                    let findUrl = new RegExp(/[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi);
+                    let findUrl = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
 
-                    if (msg.message.match(findUrl)) {
-                        console.log("found");
-                        $('#messages').append($('<li>').html(msg.message.replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, function (url) {
+                    if (findUrl.test(msg.message)) {
+                        $('#messages').append($('<li>').html(msg.message.replace(/<\/?[^>]+(>|$)/g, "").replace(findUrl, function (url) {
                             return '<a href="' + url + '" target="_blank">' + url + '</a>';
                         })).css('color', msg.color));
                     } else {

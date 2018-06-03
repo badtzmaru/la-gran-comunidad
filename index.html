@@ -243,7 +243,7 @@
                 socket.on('chat message', function (msg) {
 
                     let findUrl =
-                        /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+                        /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
 
                     if (findUrl.test(msg.message)) {
                         $('#messages').append($('<li>').html(msg.message.replace(/<\/?[^>]+(>|$)/g, "")

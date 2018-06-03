@@ -9,8 +9,7 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="Dark Chat" />
     <meta property="og:description" content="Anonymous chat without logs, censorship or tracking." />
-    <meta property="og:image" content="https://cdn.discordapp.com/attachments/225805312978976768/452580455741653022/icon.png"
-    />
+    <meta property="og:image" content="https://cdn.discordapp.com/attachments/225805312978976768/452580455741653022/icon.png" />
 
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
@@ -105,7 +104,7 @@
         }
     </style>
     <script>
-        let usernames = true;
+        let usernames = false;
 
         let userList = [
             "Aidan G",
@@ -161,11 +160,6 @@
             "Wyatt B",
             "Wyatt S",
         ];
-        // let userList = [];
-        // axios.get("https://pscscoding.com/proxy.php?url=https://pastebin.com/raw/jDwQa5ix").then(response => {
-        //     userList = response.data.split("\n");
-        //     console.log(userList);
-        // })
 
         let commands = {
             shrug: () => {
